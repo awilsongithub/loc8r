@@ -1,3 +1,11 @@
+/**
+* LOTS OF LITTLE APPS CONNECTED
+* invoking express probably returns a lot of methods
+* into the app variable so we can use them here.
+* .use, .set, .get, The express node module directory
+* has subdirectories with lots of js file modules.
+*/
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,7 +13,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// requirre route files
+// require route files into this file
 var routes = require('./app_server/routes/index');
 var users = require('./app_server/routes/users');
 
