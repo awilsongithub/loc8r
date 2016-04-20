@@ -1,5 +1,8 @@
 extends layout
 
+// include (require) file with mixin definitions
+include _includes/sharedHTMLfunctions 
+  
 block content
   #banner.page-header
     .row
@@ -11,63 +14,19 @@ block content
     .col-xs-12.col-sm-8
       .row.list-group
 
+        // loop to render each location's info 
         each location in locations 
           .col-xs-12.list-group-item
             h4
               a(href='/location')= location.name
               small &nbsp;
-                span.glyphicon.glyphicon-star
-                span.glyphicon.glyphicon-star
-                span.glyphicon.glyphicon-star
-                span.glyphicon.glyphicon-star
-                span.glyphicon.glyphicon-star-empty
+                +outputRating(location.rating)
               span.badge.pull-right.badge-default= location.distance
-             p.address= location.address
-             p
+            p.address= location.address
+            p
               each facility in location.facilities
-               span.label.label-warning= facility
-               &nbsp;
-             
-
-        
-
-        //- .col-xs-12.list-group-item
-        //-   h4
-        //-     a(href="/location") 1212 Lounge
-        //-     small &nbsp;
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star-empty
-        //-     span.badge.pull-right.badge-default 100m
-        //-   p.address 1212 S. Michigan, Chicago, IL
-        //-   p
-        //-     span.label.label-warning Standing desks
-        //-     &nbsp;
-        //-     span.label.label-warning Premium wifi
-        //-     &nbsp;
-        //- 
-        //- .col-xs-12.list-group-item
-        //-   h4
-        //-     a(href="/location") Overflow Coffee Bar
-        //-     small &nbsp;
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star
-        //-       span.glyphicon.glyphicon-star-empty
-        //-     span.badge.pull-right.badge-default 100m
-        //-   p.address 1550 S. State, Chicago, IL 60605
-        //-   p
-        //-     span.label.label-warning Hot drinks
-        //-     &nbsp;
-        //-     span.label.label-warning Food
-        //-     &nbsp;
-        //-     span.label.label-warning Premium wifi
-        //-     &nbsp;
-        //-     span.label.label-warning Locally owned
-        //-     &nbsp;
+                span.label.label-warning= facility
+                &nbsp;
 
     .col-xs-12.col-sm-4
       p.lead Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffe, cake or a pint? Let Loc8r help you find the place you're looking for.

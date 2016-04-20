@@ -12,7 +12,7 @@ module.exports.homelist = function(req, res) {
       locations: [{
         name: '1212 Lounge',
         address: '1212 S. Michigan, Chicago, IL 60605',
-        rating: 4,
+        rating: 5,
         facilities: ['Standing desks', 'Wifi'],
         distance: '100m'
       },{
