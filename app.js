@@ -6,6 +6,10 @@
 * has subdirectories with lots of js file modules.
 */
 
+
+/**
+* CODE I MOSTLY UNDERSTAND
+*/
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -26,15 +30,23 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+// middleware methods
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// mount routes
 app.use('/', routes);
 app.use('/users', users);
 
+
+
+/**
+* CODE I MOSTLY DON'T UNDERSTAND YET
+*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -65,6 +77,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 
-// construct and define schema paths, data types, defaults, validations etc
-// nested schema definitions come before parent schema
+/**
+* DATA MODELS, DEFAULTS AND VALIDATIONS
+* nested schema definitions come before parent schema
+*/
+
 var reviewSchema = new mongoose.Schema({
   author: String,
   rating: {type: Number, required: true, min: 0, max: 5},
@@ -25,3 +28,18 @@ var locationSchema = new mongoose.Schema({
   openingTimes: [openingTimeSchema],
   reviews: [reviewSchema]
 });
+
+// compile schema into a model (model name, schema to use)
+// collection will be pluralized lowercase of model
+// model instances will map 1:1 to db documents
+mongoose.model('Location', locationSchema);
+
+/**
+* MONGOLAB LIVE DB INFO
+* db URI:  mongodb://heroku_t1hlj430:Loc8rmLabdbpwd@ds019491.mlab.com:19491/heroku_t1hlj430
+* server: ds019491.mlab.com
+* port: 19491
+* username: heroku_t1hlj430
+* pwd: Loc8rmLabdbpwd
+* db name: same as user
+*/
