@@ -33,13 +33,3 @@ var locationSchema = new mongoose.Schema({
 // collection will be pluralized lowercase of model
 // model instances will map 1:1 to db documents
 mongoose.model('Location', locationSchema);
-
-/**
-* MONGOLAB LIVE DB INFO
-* db URI:  mongodb://heroku_t1hlj430:Loc8rmLabdbpwd@ds019491.mlab.com:19491/heroku_t1hlj430
-* server: ds019491.mlab.com
-* port: 19491
-* username: heroku_t1hlj430
-* pwd: Loc8rmLabdbpwd
-* db name: same as user
-*/

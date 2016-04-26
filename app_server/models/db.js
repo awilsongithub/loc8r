@@ -1,7 +1,13 @@
 // VARIABLE DECLARATIONS AND CONNECTION STRING
 var mongoose = require('mongoose');
-// define db URI and .connect
-var dbURI = 'mongodb://localhost/"Loc8r'; // protocol://server/dbname
+
+// DB CONNECTION STRINGS (DB URI)
+// for dev and production environments.
+// mLab db info in LastPass
+var dbURI = 'mongodb://localhost/"Loc8r';
+if (process.env.NODE_ENV === 'production'){
+  dbURI = process.env.MONGOLAB_URI; // variable holding connection string. obscured in variable to hide db password
+}
 mongoose.connect(dbURI);
 var gracefulShutdown;
 
@@ -45,3 +51,22 @@ process.on('SIGTERM', function() {
 
 // require location Schema
 require('./locations.js');
+
+
+
+
+
+
+/**
+TROUBLESHOOTING CONNECTION FAILURE
+i have connection string from db tied to myu heroku acct, arcane app
+run heroku config:set cmnd from sidebar instrs DONE. SUCCESS.
+ping successsful. port successful. DONE.
+http://docs.mlab.com/connecting/#help
+we are connectied but we can't restore: (auth failure)
+
+ADD COLLECTION VIA GUI AND QUERY VIA CLI
+login, locations add with fields DONE
+query... DONE. WORKS.
+
+*/
