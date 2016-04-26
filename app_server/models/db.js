@@ -6,7 +6,9 @@ var mongoose = require('mongoose');
 // mLab db info in LastPass
 var dbURI = 'mongodb://localhost/"Loc8r';
 if (process.env.NODE_ENV === 'production'){
-  dbURI = process.env.MONGOLAB_URI; // variable holding connection string. obscured in variable to hide db password
+  dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds019491.mlab.com:19491/heroku_t1hlj430';
+  // dbURI = process.env.MONGOLAB_URI;
+  // variable holding connection string. obscured in variable to hide db password
 }
 mongoose.connect(dbURI);
 var gracefulShutdown;
@@ -54,9 +56,6 @@ require('./locations.js');
 
 
 
-
-
-
 /**
 TROUBLESHOOTING CONNECTION FAILURE
 i have connection string from db tied to myu heroku acct, arcane app
@@ -68,5 +67,8 @@ we are connectied but we can't restore: (auth failure)
 ADD COLLECTION VIA GUI AND QUERY VIA CLI
 login, locations add with fields DONE
 query... DONE. WORKS.
+
+HEROKU NOT CONNECTING TO MLAB DB
+2016-04-26T18:33:01.214825+00:00 app[web.1]: mongoose connection error: MongoError: connect ECONNREFUSED 127.0.0.1:27017
 
 */
