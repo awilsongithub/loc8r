@@ -15,10 +15,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-require('./app_server/models/db'); // no var since won't use methods of it
+require('./app_api/models/db'); // no var since won't use methods of it
 
-// require route files into this file
+// including routes in the app
 var routes = require('./app_server/routes/index');
+var routesApi = require('./app_api/routes/index');
 var users = require('./app_server/routes/users');
 
 var app = express();
@@ -37,8 +38,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// mount routes
+// mount route. Use them for requests to this route prefix
 app.use('/', routes);
+app.use('/api', routesApi);
 app.use('/users', users);
 
 

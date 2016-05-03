@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 * nested schema definitions come before parent schema
 */
 
+/* subdocument schema */
 var reviewSchema = new mongoose.Schema({
   author: String,
   rating: {type: Number, required: true, min: 0, max: 5},
@@ -12,6 +13,7 @@ var reviewSchema = new mongoose.Schema({
   createdOn: {type: Date, "default": Date.now}
 });
 
+/* subdocument schema */
 var openingTimeSchema = new mongoose.Schema({
   days: {type: String, required: true},
   opening: String,
