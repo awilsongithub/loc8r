@@ -26,3 +26,9 @@ block content
       each item in items
         h4= item.name
           p This item is rated #{item.rating}
+
+
+
+
+
+          

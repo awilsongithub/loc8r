@@ -5,7 +5,7 @@ var gracefulShutdown;
 // DB CONNECTION STRINGS (DB URI)
 // for dev and production environments.
 // mLab db info in LastPass
-var dbURI = 'mongodb://localhost/"Loc8r';
+var dbURI = 'mongodb://localhost/Loc8r';
 if (process.env.NODE_ENV === 'production') {
   dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
   // SETTING USING MONGOLAB_URI DIDN'T WORK....

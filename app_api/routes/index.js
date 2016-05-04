@@ -1,5 +1,5 @@
 /*
-* OUR API ROUTES - URL PREFIX /API/
+* API ROUTES - URL PREFIX /API/
 */
 
 /* require modules */
