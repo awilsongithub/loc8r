@@ -11,38 +11,29 @@ var sendJsonResponse = function(res, status, content) {
   res.json(content);
 };
 
+// GET location using id in params. check for ids in params and if there findById select only name and reviews data declare response object var and review var. if no location returned from query or if err returned send 404 json responses. if location.reviews returned and > 0 (an array) then build review object, if no review send error json. else build response object with location name, id and review and send it else say no reviews found
+// GET one review. Five responses possible: 1. No required params 2. no location found 3. err returned 4. no review found 5. response sent containing location name, id and review
 module.exports.reviewsReadOne = function(req, res){
-  // check for params including locationid, reviewid
   if (req.params && req.params.locationid && req.params.reviewid) {
     Loc
       .findById(req.params.locationid)
-      // add mongoose select method to select name and reviews values only
-      .select('name reviews')
-      // callback gets either an err or location obj back from query
+      .select('name reviews') // mongoose select only these fields
       .exec(function(err, location) {
-        // declare variables for response object and review
         var response, review;
         console.log('we got the location:' + location);
-        // check for location object or err
-
-        // these 2 error trap statements not working may 4....
         if (!location) {
-          sendJsonResponse(res, 404, {"message": "locationid not found from db query"});
+          sendJsonResponse(res, 404, {"message": "locationid not found"});
           return;
         } else if (err) {
           sendJsonResponse(res, 404, err);
           return;
         }
-
-        // check that returned location has reviews containing at least 1
         if (location.reviews && location.reviews.length > 0) {
           console.log(req.params.reviewid);
-          // now, can we find this particular review?  using id method
-          review = location.reviews.id(req.params.reviewid);
-          if (!review) { // failed to find this reviewid
-            sendJsonResponse(res, 404, {"message": "review with this id not found"});
-          } else {
-            // build response object containing location name and id and review
+          review = location.reviews.id(req.params.reviewid); // mongoose id method
+          if (!review) {
+            sendJsonResponse(res, 404, {"message": "no review with this id"});
+          } else { // build response JS object
             response = {
               location : {
                 name : location.name,
@@ -51,7 +42,6 @@ module.exports.reviewsReadOne = function(req, res){
               review : review
             };
             console.log('heres the response object:' + response);
-            // send review response
             sendJsonResponse(res, 200, response);
           }
         } else {
@@ -59,18 +49,15 @@ module.exports.reviewsReadOne = function(req, res){
         }
       }); // end .exec
   } else {
-    sendJsonResponse(res, 404, {"message": "both locationid and reviewid are required"});
+    sendJsonResponse(res, 404, {"message": "locationid & reviewid required"});
   }
-}; // end controller. test it with these urls:
+}; // end controller. test it with these location and review ids:
  // 571e4a7a653bcfb5074123e1/reviews/571e4b36653bcfb5074123e2
  // 571e52f8653bcfb5074123e3/reviews/571e5406653bcfb5074123e4
-
-
 
 module.exports.reviewsCreate = function(req, res){
   sendJsonResponse(res, 200, {"status": "success bro"});
 };
-
 module.exports.reviewsUpdateOne = function(req, res){
   sendJsonResponse(res, 200, {"status": "success bro"});
 };
