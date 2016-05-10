@@ -76,7 +76,7 @@ module.exports.locationsListByDistance = function(req, res){
     num: 10
   };
   // use model to query for nearby location docs
-  // and push customized results onto locations array to return
+  // push custom results onto locations array to return
   Loc.geoNear(point, geoOptions, function(err, results, stats){
     // array to hold objects to return
     var locations = [];
@@ -95,4 +95,4 @@ module.exports.locationsListByDistance = function(req, res){
     sendJsonResponse(res, 200, locations);
   }); // end geoNear
 }; // end locationsListByDistance
-// test with /locations?lng=-87.62411&lat=41.867449  
+// test with /locations?lng=-87.62411&lat=41.867449
