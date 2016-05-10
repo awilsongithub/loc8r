@@ -19,8 +19,8 @@ module.exports.reviewsReadOne = function(req, res){
       .findById(req.params.locationid)
       .select('name reviews') // mongoose select only these fields
       .exec(function(err, location) {
-        var response, review;
-        console.log('we got the location:' + location);
+        var response, review, idOfReview;
+        console.log('we got the location name & reviews:' + location); // success!!!
         if (!location) {
           sendJsonResponse(res, 404, {"message": "locationid not found"});
           return;
@@ -29,8 +29,9 @@ module.exports.reviewsReadOne = function(req, res){
           return;
         }
         if (location.reviews && location.reviews.length > 0) {
-          console.log(req.params.reviewid);
+          console.log(req.params.reviewid); // SUCCESS!!!
           review = location.reviews.id(req.params.reviewid); // mongoose id method
+          console.log('review object:' + review);
           if (!review) {
             sendJsonResponse(res, 404, {"message": "no review with this id"});
           } else { // build response JS object
@@ -41,7 +42,6 @@ module.exports.reviewsReadOne = function(req, res){
               },
               review : review
             };
-            console.log('heres the response object:' + response);
             sendJsonResponse(res, 200, response);
           }
         } else {
@@ -51,9 +51,16 @@ module.exports.reviewsReadOne = function(req, res){
   } else {
     sendJsonResponse(res, 404, {"message": "locationid & reviewid required"});
   }
-}; // end controller. test it with these location and review ids:
- // 571e4a7a653bcfb5074123e1/reviews/571e4b36653bcfb5074123e2
- // 571e52f8653bcfb5074123e3/reviews/571e5406653bcfb5074123e4
+}; // end controller.
+
+// NEW COLLECTION URLS FOR TESTING
+// 57315aa0b3aefb44d9098949/reviews/57315af6b3aefb44d909894a
+// 57315b2bb3aefb44d909894b/reviews/57315b68b3aefb44d909894c
+
+
+
+
+
 
 module.exports.reviewsCreate = function(req, res){
   sendJsonResponse(res, 200, {"status": "success bro"});
