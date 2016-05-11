@@ -59,8 +59,33 @@ module.exports.locationsDeleteOne = function(req, res){
   sendJsonResponse(res, 200, {"status": "success bro"});
 };
 module.exports.locationsCreate = function(req, res){
-  sendJsonResponse(res, 200, {"status": "success bro"});
-};
+  // Loc model .create method takes data object custom built with req.body data and callback expecting err, new doc as saved in db
+  Loc
+    .create({
+      name: req.body.name,
+      address: req.body.address,
+      facilities: req.body.facilities.split(","),
+      coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
+      // two sets of opening times data required pass required fields validation in model and create a location 
+      openingTimes: [{
+        days: req.body.days1,
+        opening: req.body.opening1,
+        closing: req.body.closing1,
+        closed: req.body.closed1
+      },{
+        days: req.body.days2,
+        opening: req.body.opening2,
+        closing: req.body.closing2,
+        closed: req.body.closed2
+      }]
+    }, function(err, location){
+      if (err) {
+        sendJsonResponse(res, 404, err);
+      } else {
+        sendJsonResponse(res, 201, location);
+      }
+    }); // end .create
+}; // end locationsCreate
 
 module.exports.locationsListByDistance = function(req, res){
   var lng = parseFloat(req.query.lng);
@@ -96,3 +121,4 @@ module.exports.locationsListByDistance = function(req, res){
   }); // end geoNear
 }; // end locationsListByDistance
 // test with /locations?lng=-87.62411&lat=41.867449
+// lat overflow 41.860417 lng -87.627924
