@@ -99,9 +99,22 @@ module.exports.locationsUpdateOne = function(req, res){
     });
 };
 
-
+/* DELETE a location */
 module.exports.locationsDeleteOne = function(req, res){
-  sendJsonResponse(res, 200, {"status": "success bro"});
+  var locationid = req.params.locationid;
+  if (locationid){
+    Loc
+      .findByIdAndRemove(locationid)
+      .exec(function(err, location){
+        if (err){
+          sendJsonResponse(res, 404, err);
+        } else {
+          sendJsonResponse(res, 204, null);
+        }
+      });
+  } else {
+    sendJsonResponse(res, 404, {"message": "locationid required"});
+  }
 };
 
 module.exports.locationsCreate = function(req, res){

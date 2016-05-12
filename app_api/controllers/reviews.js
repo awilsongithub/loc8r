@@ -181,7 +181,41 @@ module.exports.reviewsUpdateOne = function(req, res){
     });
 };
 
-
+/* check for needed ids, find location, location? err? reviews > 0?
+find review suboc and remove it with chained .id().remove(), save location, err? send res 204 null */
 module.exports.reviewsDeleteOne = function(req, res){
-  sendJsonResponse(res, 200, {"status": "success bro"});
+  if (!req.params.locationid || !req.params.reviewid){
+    sendJsonResponse(res, 404, {"message": "reviewid and locationid both required"});
+    return;
+  }
+  Loc
+    .findById(req.params.locationid)
+    .select('reviews')
+    .exec(function(err, location){
+      if (!location) {
+        sendJsonResponse(res, 404, {"message": "locationid not found"});
+        return;
+      } else if (err) {
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+      if (location.reviews && location.reviews.length > 0){
+        if (!location.reviews.id(req.params.reviewid) ) {
+          sendJsonResponse(res, 404, {"message": "reviewid not found"});
+        } else {
+          location.reviews.id(req.params.reviewid).remove();
+          location.save(function(err, location){
+            if (err){
+              sendJsonResponse(res, 404, err);
+            } else {
+              sendJsonResponse(res, 204, null);
+              updateAverageRating(location._id);
+            }
+          });
+        }
+      } else {
+        sendJsonResponse(res, 404, {"message": "no review to delete"});
+      }
+    });
 };
+// test with /5732a475f125b4b88686a403/reviews/573362b8da89258e8fc335af
