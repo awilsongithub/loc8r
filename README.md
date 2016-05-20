@@ -57,3 +57,63 @@ block content
           test it with these location and review ids:
            // 571e4a7a653bcfb5074123e1/reviews/571e4b36653bcfb5074123e2
            // 571e52f8653bcfb5074123e3/reviews/571e5406653bcfb5074123e4
+
+
+
+
+
+module.exports.locationsListByDistance = function(req, res){
+ var lng = parseFloat(req.query.lng);
+ var lat = parseFloat(req.query.lat);
+ var point = {
+   type: "Point",
+   coordinates: [lng, lat]
+ };
+ //set geoOptions equal to object
+ var geoOptions = {
+   spherical: true,
+
+   // is the getRads method broken? hard code value
+   maxDistance: 1000000,
+
+   // maxDistance: theEarth.getRadsFromDistance(20),
+   num: 10
+ };
+ // use model to query for nearby location docs
+ // push custom results onto locations array to return
+ Loc.geoNear(point, geoOptions, function(err, results, stats){
+   // array to hold objects to return
+   var locations = [];
+
+   // can we log an object we know we have?
+   var testObject = {
+     key: 'value'
+   };
+   console.log('results: ' + results);
+   console.log('stats:' + stats);
+   console.log('testObject:' + testObject);
+
+
+   // hard code objects instead of results to see it iteration forEach working?
+   var resultsX = [{
+     obj: {name: 'text name'}
+   },{
+     obj: {name: 'test name2'}
+   }];
+
+   // forEach loop thru "docs" to build each custom objects
+   // geoNear returns docs with a dis and an obj element
+   resultsX.forEach(function(doc){
+     locations.push({
+       distance: theEarth.getDistanceFromRads(doc.dis),
+       name: doc.obj.name,
+       address: doc.obj.address,
+       rating: doc.obj.rating,
+       facilities: doc.obj.facilities,
+       _id: doc.obj._id
+     }); // end .push
+   }); // end .forEach
+   console.log('locations: ' + locations);
+   sendJsonResponse(res, 200, locations);
+ }); // end geoNear
+}; // end locationsListByDistance

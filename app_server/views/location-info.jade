@@ -67,7 +67,9 @@ block content
                       span.rating
                         +outputRating(location.rating)
                       span.reviewAuthor #{review.author}
-                      small.reviewTimestamp #{review.timeStamp}
+                      small.reviewTimestamp
+                        // mixin turns date into user friendly text
+                        +formatDate(review.createdOn)
                   .col-xs-12
                     p !{(review.reviewText).replace(/\n/g, '<br/>')}
           

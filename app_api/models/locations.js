@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
 
-/**
-* DATA MODELS, DEFAULTS AND VALIDATIONS
-* nested schema definitions come before parent schema
-*/
-
-/* subdocument schema */
+/* subdocument schemas go before parent */
 var reviewSchema = new mongoose.Schema({
   author: String,
   rating: {type: Number, required: true, min: 0, max: 5},

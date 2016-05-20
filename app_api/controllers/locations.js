@@ -1,6 +1,4 @@
-/*
-* API LOCATIONS CONTROLLERS
-*/
+/* API LOCATIONS CONTROLLERS */
 
 /* access db, bring on model to interact with Locations collection */
 var mongoose = require('mongoose');
@@ -50,7 +48,6 @@ module.exports.locationsReadOne = function (req, res){
     sendJsonResponse(res, 404, {"message": "location id required"});
   }
 };
-
 
 // TODO debug this full update ctrlr. Just using skeleton without error checking and with only 1 field update ability. Kept getting 404 errors in postman even if i include all fields with values in req body. see saved puts in postman. Simons code didn't work either.
 /* findById & update in code block of callback
@@ -159,25 +156,41 @@ module.exports.locationsListByDistance = function(req, res){
     maxDistance: theEarth.getRadsFromDistance(20),
     num: 10
   };
+  if (!lng || !lat){
+    sendJsonResponse(res, 404, {"message": "lng and lat query parameters are required"});
+    return;
+  }
   // use model to query for nearby location docs
   // push custom results onto locations array to return
   Loc.geoNear(point, geoOptions, function(err, results, stats){
+
+    // console.log('results: ' + results);
+    // console.log('stats:');
     // array to hold objects to return
     var locations = [];
-    // forEach loop thru "docs" to build each custom objects
-    // geoNear returns docs with a dis and an obj element
-    results.forEach(function(doc){
-      locations.push({
-        distance: theEarth.getDistanceFromRads(doc.dis),
-        name: doc.obj.name,
-        address: doc.obj.address,
-        rating: doc.obj.rating,
-        facilities: doc.obj.facilities,
-        _id: doc.obj._id
-      }); // end .push
-    }); // end .forEach
-    sendJsonResponse(res, 200, locations);
+    if (err){
+      sendJsonResponse(res, 404, err);
+    } else {
+      // forEach loop thru "docs" to build each custom objects
+      // geoNear returns docs with a dis and an obj element
+      results.forEach(function(doc){
+        locations.push({
+          distance: theEarth.getDistanceFromRads(doc.dis),
+          name: doc.obj.name,
+          address: doc.obj.address,
+          rating: doc.obj.rating,
+          facilities: doc.obj.facilities,
+          _id: doc.obj._id
+        }); // end .push
+      }); // end .forEach
+      // console.log('results: ' + results);
+      // console.log('stats:');
+      // console.log('locations: ' + locations);
+      sendJsonResponse(res, 200, locations);
+    }
+
   }); // end geoNear
 }; // end locationsListByDistance
 // test with /locations?lng=-87.62411&lat=41.867449
-// lat overflow 41.860417 lng -87.627924
+// lat overflow and cultural ctr ?lng=-87.627227&lat=41.877512
+// pk mich bus ?lng=-87.55555&lat= 41.877512
