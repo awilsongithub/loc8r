@@ -30,12 +30,14 @@ module.exports.homelist = function(req, res) {
       function(err, response, body){
         var i, data;
         data = body; // an array of locations
+        console.log(data);
         if (response.statusCode === 200 && response.length){
           /* iterate data array, distance = reconfigured distance */
           for (i=0; i<data.length; i++){
             data[i].distance = _formatDistance(data[i].distance);
           }
         }
+        console.log(data);
         renderHomepage(req, res, data);
       }
   );
@@ -59,6 +61,7 @@ var _formatDistance = function(distance){
 /* render page integrating API response data and view */
 renderHomepage = function(req, res, responseBody){
   var message;
+  console.log(responseBody);
   // if not array or array is empty set message string with message
   if (!(responseBody instanceof Array)){
     message = "API lookup error";
