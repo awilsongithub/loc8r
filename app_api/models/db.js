@@ -5,13 +5,17 @@ var gracefulShutdown;
 // DB CONNECTION STRINGS (DB URI)
 // for dev and production environments.
 // mLab db info in LastPass
-var dbURI = 'mongodb://localhost/Loc8r';
-if (process.env.NODE_ENV === 'production') {
-  dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
-  // SETTING USING MONGOLAB_URI DIDN'T WORK....
-  // dbURI = process.env.MONGOLAB_URI;
-  // connection string. obscured in variable to hide password
-}
+// SETTING USING MONGOLAB_URI DIDN'T WORK....
+// dbURI = process.env.MONGOLAB_URI;
+// connection string. obscured in variable to hide password
+
+// REMOVE PROCESS.ENV STUFF: MAYBE THATS THE PROBLEM?
+// var dbURI = 'mongodb://localhost/Loc8r';
+// if (process.env.NODE_ENV === 'production') {
+//   dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
+// }
+
+var dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
 mongoose.connect(dbURI);
 
 // MONITOR MONGOOSE CONNECTION EVENTS

@@ -6,7 +6,7 @@ var apiOptions = {
   server: 'http://localhost:3000'
 };
 if (process.env.NODE_ENV === 'production') {
-  apiOptions.server = 'https://arcane-brook-51371.herokuapp.com/';
+  apiOptions.server = 'https://arcane-brook-51371.herokuapp.com';
 }
 
 /* GET home page by building my own little "Postman-lite":
