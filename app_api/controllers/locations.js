@@ -191,6 +191,6 @@ module.exports.locationsListByDistance = function(req, res){
 
   }); // end geoNear
 }; // end locationsListByDistance
-// test with /locations?lng=-87.62411&lat=41.867449
+// MLAB locations both have these coords /locations?lng=-87.627924&lat=41.860417
 // lat overflow and cultural ctr ?lng=-87.627227&lat=41.877512
 // pk mich bus ?lng=-87.55555&lat= 41.877512
