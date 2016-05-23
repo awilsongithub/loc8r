@@ -1,13 +1,18 @@
-/* APPLICATION CONTROLLERS */
+/*
+=========================================================
+APPLICATION CONTROLLERS
+=========================================================
+*/
 
 var request = require('request');
-
 var apiOptions = {
   server: 'http://localhost:3000'
 };
 if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://arcane-brook-51371.herokuapp.com';
 }
+
+/**************** HOMEPAGE ********************/
 
 /* GET home page by building my own little "Postman-lite":
 build options object for request using apiOptions.server + path, execute request passing options obj and callback expecting err, full response and response body and calling render method passing req, res
@@ -43,21 +48,6 @@ module.exports.homelist = function(req, res) {
   );
 };
 
-/* reformat distance output so it's more human readable */
-var _formatDistance = function(distance){
-  var unit, numDistance;
-  if (distance > 1){
-    // round to 1 decimal point
-    numDistance = parseFloat(distance).toFixed(1);
-    unit = 'km';
-  } else {
-    // convert to meters and round to nearest meter
-    numDistance = parseFloat(distance * 1000, 10);
-    unit = 'm';
-  }
-  return numDistance + unit;
-};
-
 /* render page integrating API response data and view */
 renderHomepage = function(req, res, responseBody){
   var message;
@@ -82,9 +72,91 @@ renderHomepage = function(req, res, responseBody){
   });
 };
 
+/**************** LOCATION DETAILS PAGES ********************/
 
-/* GET locations info page: define path using hard coded part + params part, build requestOptions and call request with callback calling renderDetailPage  */
+/* get location data using it's id and render detail page */
 module.exports.locationInfo = function(req, res) {
+  getLocationInfo(req, res, function(req, res, responseData){
+    renderDetailPage(req, res, responseData);
+  });
+};
+
+/* getLocationInfo calls this to render location details */
+var renderDetailPage = function(req, res, locDetail){
+  res.render('location-info', {
+    title: locDetail.name,
+    pageHeader: {title: locDetail.name},
+    sidebar: {
+      context: "is on Loc8r because it's got wifi and space to get work done.",
+      callToAction: 'Been there? Please leave a review!'
+    },
+    location: locDetail
+  }); // end data object and render arguments
+};
+
+/*************** REVIEWS  ********************/
+
+/* get location data using it's id and render add review page */
+module.exports.addReview = function(req, res) {
+  getLocationInfo(req, res, function(req, res, responseData){
+    renderReviewForm(req, res, responseData);
+  });
+};
+
+/* POST new review to api */
+module.exports.doAddReview = function(req, res) {
+  // send on the req.body info to the api
+  // send the locationid to the api
+  // requestOptions with url, body json from form, method post
+  var path, requestOptions, locationid, postdata;
+  locationid = req.params.locationid;
+  path = '/api/locations/' + locationid + '/reviews';
+  postdata = {
+    author: req.body.name,
+    rating: parseInt(req.body.rating, 10),
+    reviewText: req.body.review
+  };
+  requestOptions = {
+    url: apiOptions.server + path,
+    method: 'POST',
+    json: postdata
+  };
+  // check for required fields before making request to api
+  if (!postdata.author || !postdata.rating || !postdata.reviewText){
+    res.redirect('/location/' + locationid + '/reviews/new/?err=val');
+  } else {
+    request(
+      requestOptions,
+      function(err, response, body){
+        if (response.statusCode === 201){
+          res.redirect('/location/' + locationid);
+        }
+        // if specific 400 (bad request) error with specific error message name
+        else if (response.statusCode === 400 && body.name && body.name === "Validation Error") {
+          res.redirect('/location/' + locationid + '/reviews/new?err=val');
+        }
+        else {
+          _showError(req, res, response.statusCode);
+        }
+      }
+    );
+  }
+};
+
+/* getLocationInfo calls this to render a form */
+var renderReviewForm = function(req, res, locDetail){
+  res.render('location-review-form', {
+    title: 'Review ' + locDetail.name + ' on Loc8r',
+    pageHeader: {title: 'Review ' + locDetail.name},
+    error: req.query.err
+  });
+};
+
+/**************** HELPER FUNCTIONS ********************/
+
+/* reusable helper function for addReview and locationInfo ctrlrs */
+/* define path using hard coded part + params part, build requestOptions and call request. Callback executes using data */
+var getLocationInfo = function(req, res, callback){
   var path, requestOptions;
   path = "/api/locations/" + req.params.locationid;
   requestOptions = {
@@ -104,14 +176,15 @@ module.exports.locationInfo = function(req, res) {
           lat: body.coords[1]
         };
         console.log(data); // location json again
-        renderDetailPage(req, res, data);
+        callback(req, res, data);
       } else {
         _showError(req, res, response.statusCode);
       }
 
     }
-  );
+  ); // end request
 };
+
 
 // accepts status code, populates title, contnet message accordingly for 404, other, sends res.status(status) to browser and renders message to user
 var _showError = function(req, res, status){
@@ -130,30 +203,20 @@ var _showError = function(req, res, status){
   });
 };
 
-// the location-info.jade view expects a "location" object
-var renderDetailPage = function(req, res, locDetail){
-  res.render('location-info', {
-    title: locDetail.name,
-    pageHeader: {title: locDetail.name},
-    sidebar: {
-      context: "is on Loc8r because it's got wifi and space to get work done.",
-      callToAction: 'Been there? Please leave a review!'
-    },
-    location: locDetail
-  }); // end data object and render arguments
+/* reformat distance output so it's more human readable */
+var _formatDistance = function(distance){
+  var unit, numDistance;
+  if (distance > 1){
+    // round to 1 decimal point
+    numDistance = parseFloat(distance).toFixed(1);
+    unit = 'km';
+  } else {
+    // convert to meters and round to nearest meter
+    numDistance = parseFloat(distance * 1000, 10);
+    unit = 'm';
+  }
+  return numDistance + unit;
 };
-
-
-
-/* GET add review page */
-module.exports.addReview = function(req, res) {
-    res.render('location-review-form', {
-      title: 'Review 1212 Lounge on Loc8r',
-      pageHeader: {title: 'Review 1212 Lounge'}
-    });
-};
-
-
 
 
 

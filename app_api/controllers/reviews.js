@@ -42,8 +42,10 @@ var doAddReview = function(req, res, location){
     });
     location.save(function(err, location){
       var thisReview;
+      // Error bubble up here: mongoose returns err object follwoing save attempt. 400 = bad request, needs changes
       if (err){
-        sendJsonResponse(res, 404, err);
+        console.log(err);
+        sendJsonResponse(res, 400, err);
       } else {
         updateAverageRating(location._id);
         thisReview = location.reviews[location.reviews.length - 1];
