@@ -24,7 +24,11 @@ var users = require('./app_server/routes/users');
 
 var app = express();
 
-// view engine setup
+// view engine setup Jade
+app.set('views', path.join(__dirname, 'app_server', 'views'));
+app.set('view engine', 'jade');
+
+// view engine replaced with express-handlebars
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 
@@ -36,6 +40,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+// public contains static files sent to client
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mount route. Use them for requests to this route prefix

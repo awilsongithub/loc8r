@@ -19,8 +19,8 @@ var gracefulShutdown;
 ////////////////////////////////////////////////////////////////////
 //                     CHOOSE DBURI                               //
 ////////////////////////////////////////////////////////////////////
-// var dbURI = 'mongodb://localhost/Loc8r';
-var dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
+var dbURI = 'mongodb://localhost/Loc8r';
+// var dbURI = 'mongodb://adam_new_1212:Loc8rmLabdbpwd@ds021741.mlab.com:21741/heroku_n7zpphvz';
 
 
 // CONNECT
