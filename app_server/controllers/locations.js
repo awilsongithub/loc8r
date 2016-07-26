@@ -5,6 +5,8 @@ APPLICATION CONTROLLERS
 */
 
 var request = require('request');
+
+// define dev and production api servers
 var apiOptions = {
   server: 'http://localhost:3000'
 };
@@ -12,65 +14,25 @@ if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://arcane-brook-51371.herokuapp.com';
 }
 
-/**************** HOMEPAGE ********************/
+/**************** ANGULAR HOMEPAGE CONTROLLER ********************/
 
-/* GET home page by building my own little "Postman-lite":
-build options object for request using apiOptions.server + path, execute request passing options obj and callback expecting err, full response and response body and calling render method passing req, res
-TODO replace hard-coded lng, lat */
 module.exports.homelist = function(req, res) {
-  var requestOptions, path;
-  path = '/api/locations';
-  requestOptions = {
-    url: apiOptions.server + path,
-    method: 'GET',
-    json: {},
-    qs: {
-      lng: -87.627227,
-      lat: 41.877512,
-      maxDistance: 20 // km
-    }
-  };
-  request(
-      requestOptions,
-      function(err, response, body){
-        var i, data;
-        data = body; // an array of locations
-        console.log(data);
-        if (response.statusCode === 200 && response.length){
-          /* iterate data array, distance = reconfigured distance */
-          for (i=0; i<data.length; i++){
-            data[i].distance = _formatDistance(data[i].distance);
-          }
-        }
-        console.log(data);
-        renderHomepage(req, res, data);
-      }
-  );
+    renderHomepage(req, res);
 };
 
-/* render page integrating API response data and view */
-renderHomepage = function(req, res, responseBody){
-  var message;
-  console.log(responseBody);
-  // if not array or array is empty set message string with message
-  if (!(responseBody instanceof Array)){
-    message = "API lookup error";
-    responseBody = []; // so view won't throw error (it needs an array)
-  } else if (!responseBody.length){
-    message = "No places found nearby";
-  }
-  console.log(responseBody);
-  res.render('locations-list', {
-    title: 'Loc8r - Find a place to work with wifi',
-    pageHeader: {
-      title: 'Loc8r',
-      strapline: 'Find a place to work with wifi near you'
-    },
-    sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffe, cake or a pint? Let Loc8r help you find the place you're looking for.",
-    locations: responseBody,
-    message: message
-  });
+/******* ANGULAR NEW RENDERHOMEPAGE ******/
+
+renderHomepage = function(req, res) {
+    res.render('locations-list', {
+        title: 'Loc8r - find a place to work with wifi',
+        pageHeader: {
+            title: 'Loc8r',
+            strapline: 'Find places to work with wifi near you'
+        },
+        sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffe, cake or a pint? Let Loc8r help you find the place you're looking for."
+    });
 };
+
 
 /**************** LOCATION DETAILS PAGES ********************/
 
@@ -203,24 +165,74 @@ var _showError = function(req, res, status){
   });
 };
 
+
 /* reformat distance output so it's more human readable */
-var _formatDistance = function(distance){
-  var unit, numDistance;
-  if (distance > 1){
-    // round to 1 decimal point
-    numDistance = parseFloat(distance).toFixed(1);
-    unit = 'km';
-  } else {
-    // convert to meters and round to nearest meter
-    numDistance = parseFloat(distance * 1000, 10);
-    unit = 'm';
-  }
-  return numDistance + unit;
-};
+// this function moved to loc8rApp.js
 
 
 
-// OLD CONTROLLER WITH STATIC DATA
+/**************** PRE-ANGULAR HOMEPAGE ********************/
+
+/* GET home page by building my own little "Postman-lite":
+build options object for request using apiOptions.server + path, execute request passing options obj and callback expecting err, full response and response body and calling render method passing req, res
+TODO replace hard-coded lng, lat */
+// module.exports.homelist = function(req, res) {
+//   var requestOptions, path;
+//   path = '/api/locations';
+//   requestOptions = {
+//     url: apiOptions.server + path,
+//     method: 'GET',
+//     json: {},
+//     qs: {
+//       lng: -87.627227,
+//       lat: 41.877512,
+//       maxDistance: 20 // km
+//     }
+//   };
+//   request(
+//       requestOptions,
+//       function(err, response, body){
+//         var i, data;
+//         data = body; // an array of locations
+//         console.log(data);
+//         if (response.statusCode === 200 && response.length){
+//           /* iterate data array, distance = reconfigured distance */
+//           for (i=0; i<data.length; i++){
+//             data[i].distance = _formatDistance(data[i].distance);
+//           }
+//         }
+//         console.log(data);
+//         renderHomepage(req, res, data);
+//       }
+//   );
+// };
+
+/******* PRE-ANGULAR renderHomepage ******/
+
+// renderHomepage = function(req, res, responseBody){
+//   var message;
+//   console.log(responseBody);
+//   // if not array or array is empty set message string with message
+//   if (!(responseBody instanceof Array)){
+//     message = "API lookup error";
+//     responseBody = []; // so view won't throw error (it needs an array)
+//   } else if (!responseBody.length){
+//     message = "No places found nearby";
+//   }
+//   console.log(responseBody);
+//   res.render('locations-list', {
+//     title: 'Loc8r - Find a place to work with wifi',
+//     pageHeader: {
+//       title: 'Loc8r',
+//       strapline: 'Find a place to work with wifi near you'
+//     },
+//     sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffe, cake or a pint? Let Loc8r help you find the place you're looking for.",
+//     locations: responseBody,
+//     message: message
+//   });
+// };
+
+/************ OLD CONTROLLER WITH STATIC DATA ***************/
 // module.exports.homelist = function(req, res) {
 //     res.render('locations-list', {
 //       title: 'Loc8r - Find a place to work with wifi',

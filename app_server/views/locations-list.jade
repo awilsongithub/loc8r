@@ -12,27 +12,44 @@ block content
         h1= pageHeader.title
           small &nbsp;#{pageHeader.strapline}
   
-  // listings 
-  .row
-    .col-xs-12.col-sm-8
-      .error= message
-      .row
-        each location in locations 
-          .col-xs-12
-            .panel.panel-default
-              img.panel-image(src='https://s3-media4.fl.yelpcdn.com/bphoto/K0Mb7ebSa4DRUpEmfDZVuw/90s.jpg')
-              h4
-                a(href='/location/#{location._id}')= location.name
-                small &nbsp;
-                  +outputRating(location.rating)
-                span.badge.pull-right.badge-default= location.distance
-        
-              p.address= location.address
-              p
-                each facility in location.facilities
-                  span.label.label-warning= facility
-                  &nbsp;
+  // LISTINGS WITH ANGULAR BINDINGS 
+  .col-xs-12.col-xs-8(ng-controller='locationListCtrl')
+    .error {{ message }}
+    .row.list-group
+        .col-xs-12.list-group-item(ng-repeat='location in data.locations')
+            h4
+                a(href='/location/{{ location._id }}') {{ location.name }}
+                // bind directive as an attribute
+                small(rating-stars)
+                // custom filter added to format distance to km's
+                span.badge.pull-right.badge-default {{ location.distance | formatDistance }}
+                p.address {{ location.address }}
+                p
+                    span.label.label-warning.label-facility(ng-repeat='facility in location.facilities')
+                        | {{ facility }}
+  
+  // sidebar with old express data bindings           
+      .col-xs-12.col-sm-4
+        p.lead= sidebar 
+  
+  // listings with Express data bindings & Yelp layout  
+  //- .row
+  //-   .col-xs-12.col-sm-8
+  //-     .error= message
+  //-     .row
+  //-       each location in locations 
+  //-         .col-xs-12
+  //-           .panel.panel-default
+  //-             img.panel-image(src='https://s3-media4.fl.yelpcdn.com/bphoto/K0Mb7ebSa4DRUpEmfDZVuw/90s.jpg')
+  //-             h4
+  //-               a(href='/location/#{location._id}')= location.name
+  //-               small &nbsp;
+  //-                 +outputRating(location.rating)
+  //-               span.badge.pull-right.badge-default= location.distance
+  //-       
+  //-             p.address= location.address
+  //-             p
+  //-               each facility in location.facilities
+  //-                 span.label.label-warning= facility
+  //-                 &nbsp;
             
-    // sidebar           
-    .col-xs-12.col-sm-4
-      p.lead= sidebar 

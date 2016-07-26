@@ -1,5 +1,7 @@
 doctype html
-html
+
+// prime all view pages for angular using ng-app 
+html(ng-app='loc8rApp')
   head
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title= title
@@ -49,14 +51,17 @@ html
         
     .container
     
-      // partials appear here
+      // PARTIALS APPEAR HERE 
       block content
 
       footer
         .row
           .col-xs-12
             small &copy; Adam Wilson 2016
-
+    
+    // SCRIPTS IN THE PUBLIC FOLDER
+    script(src='/angular/angular.min.js')
+    script(src='/angular/loc8rApp.js')
     script(src='/javascripts/jquery-1.12.3.min.js')
     script(src='/bootstrap/js/bootstrap.min.js')
     script(src='/javascripts/validation.js')
