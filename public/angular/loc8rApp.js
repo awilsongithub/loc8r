@@ -1,7 +1,8 @@
 // create angular module setter for our app
 angular.module('loc8rApp', []);
 
-// angular controler with test hard coded data as property of $scope
+// angular controller
+// with test hard coded data as property of $scope
 var locationListCtrl = function($scope){
     $scope.data = {
         locations: [{
@@ -34,7 +35,7 @@ var formatDistance = function(){
         var unit, numDistance;
         if (distance && _isNumeric(distance)){
             if (distance > 1){
-              // round to 1 decimal point
+              // if at least 1 km, round for example 2.88888833 to 2.9
               numDistance = parseFloat(distance).toFixed(1);
               unit = 'km';
             } else {
@@ -50,11 +51,15 @@ var formatDistance = function(){
     };
 };
 
-// directive to create rating html. usable by multiple controllers, views
-// returns data object and template??
+// directive to create rating html usable by multiple controllers, views
+// returns data object scope and template??
 var ratingStars = function(){
     return {
-        template : "{{ location.rating }}"
+        scope: {
+            // get value used in template from attribute in html
+            thisRating: '=rating'
+        },
+        templateUrl: '/angular/rating-stars.html'
     };
 };
 

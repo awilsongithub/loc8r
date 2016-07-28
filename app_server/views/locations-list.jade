@@ -1,8 +1,8 @@
-// jade syntax: tagname.class.class2= variableName.variablepropertyName
+// jade syntax: tagname.class.class2= text/variableName.variablepropertyName
 
 extends layout
 
-// include (require) file with mixin definitions
+// include file with jade mixin definitions
 include _includes/sharedHTMLfunctions 
   
 block content
@@ -10,7 +10,7 @@ block content
     .row
       .col-lg-6
         h1= pageHeader.title
-          small &nbsp;#{pageHeader.strapline}
+          small &nbsp;#{pageHeader.strapline} 
   
   // LISTINGS WITH ANGULAR BINDINGS 
   .col-xs-12.col-xs-8(ng-controller='locationListCtrl')
@@ -20,7 +20,7 @@ block content
             h4
                 a(href='/location/{{ location._id }}') {{ location.name }}
                 // bind directive as an attribute
-                small(rating-stars)
+                small(rating-stars, rating='location.rating')
                 // custom filter added to format distance to km's
                 span.badge.pull-right.badge-default {{ location.distance | formatDistance }}
                 p.address {{ location.address }}
