@@ -24,5 +24,6 @@ h1, h2, h3, h4, h5, h6 {
 .list-group-item {
     margin-bottom: 15px;
     box-shadow: 0px 2px 3px lightgrey;
-    border: 0px solid white;
+    border: 1px solid #F1F1F1;
+    border-radius: 4px;
 }

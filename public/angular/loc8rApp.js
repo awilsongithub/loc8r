@@ -1,26 +1,57 @@
+// Loc8r database coordinates used lng -87.627227, lat 41.877512
+
 // create angular module setter for our app
 angular.module('loc8rApp', []);
 
+
 // angular controller
-// with test hard coded data as property of $scope
-var locationListCtrl = function($scope){
-    $scope.data = {
-        locations: [{
-            name: 'Burger Barn',
-            address: '125 High Street, Reading, RG6 1PS',
-            rating: 3,
-            facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-            distance: '0.296456',
-            _id: '5370a35f2536f6785f8dfb6a'
-        },{
-            name: 'Costy',
-            address: '125 High Street, Reading, RG6 1PS',
-            rating: 5,
-            facilities: ['Hot drinks', 'Food', 'Alcoholic drinks'],
-            distance: '0.7865456',
-            _id: '5370a35f2536f6785f8dfb6a'
-        }]
+// pass in data via service
+var locationListCtrl = function($scope, loc8rData, geolocation){
+    $scope.message = 'Checking your location...';
+    // geolocation service callback: successful attempt. Accepts position object from geo API. position will be used to set lat, lng.
+    $scope.getData = function(position){
+        $scope.message = 'Searching for nearby places...';
+        loc8rData
+            .success(function(data){
+                $scope.message = data.length > 0 ? "" : 'No locations found';
+                $scope.data = { locations: data };
+            })
+            .error(function(e){
+                $scope.message = 'Sorry, something went wrong';
+            });
     };
+    // geolocation service callback: geolocatoin supported but not successful: set message to message of error object returned
+    $scope.showError = function(error){
+        $scope.$apply(function(){
+            $scope.message = error.message;
+        });
+    };
+    // geolocation service callback: set message: geolocation not supported by browser
+    $scope.noGeo = function(){
+        $scope.$apply(function(){
+            $scope.message = 'Geolocation not supported by browser.';
+        });
+    };
+    // pass our functions to geolocation service we defined below
+    geolocation.getPosition($scope.getData, $scope.showError, $scope.noGeo);
+};
+
+// service to return data objects array
+var loc8rData = function($http) {
+    return $http.get('api/locations?lat=41.877512&lng=-87.627227&maxDistance=20');
+};
+
+// geolocation service using html5 built in browser method on the navigator object. function geolocation returns function definition object so it can be invoked by controller to check for geolocation availability, call it with callbacks, update message to user.
+var geolocation = function() {
+    var getPosition = function(cbSuccess, cbError, cbNoGeo){
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(cbSuccess, cbError);
+        }
+        else {
+            cbNoGeo();
+        }
+    };
+    return { getPosition: getPosition };
 };
 
 // custom filter taken from our existing express code but returning a function that does processing rather than do it itself
@@ -63,10 +94,11 @@ var ratingStars = function(){
     };
 };
 
-
-// module getter syntax to attach/register controller etc. to APPLICATION
+// attach/register (with getter syntax)
 angular
     .module('loc8rApp')
     .controller('locationListCtrl', locationListCtrl)
     .filter('formatDistance', formatDistance)
-    .directive('ratingStars', ratingStars);
+    .directive('ratingStars', ratingStars)
+    .service('loc8rData', loc8rData)
+    .service('geolocation', geolocation);

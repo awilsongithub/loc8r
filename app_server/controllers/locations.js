@@ -27,7 +27,7 @@ renderHomepage = function(req, res) {
         title: 'Loc8r - find a place to work with wifi',
         pageHeader: {
             title: 'Loc8r',
-            strapline: 'Wifi near you'
+            strapline: 'May thee find good wifi'
         },
         sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffe, cake or a pint? Let Loc8r help you find the place you're looking for."
     });

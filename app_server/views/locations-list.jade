@@ -14,7 +14,7 @@ block content
   
   // LISTINGS WITH ANGULAR BINDINGS 
   .col-xs-12.col-xs-8(ng-controller='locationListCtrl')
-    input#filter.form-control(type='text', name='filter', placeholder='Filter results...' ng-model='textFilter')
+    input#filter.form-control(type='text', name='filter', placeholder='Filter results by any keyword...' ng-model='textFilter')
     .error {{ message }}
     .row.list-group
         .col-xs-12.list-group-item(ng-repeat='location in data.locations | filter: textFilter')
