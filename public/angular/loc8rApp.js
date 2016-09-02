@@ -3,18 +3,27 @@
 // create angular module setter for our app
 angular.module('loc8rApp', []);
 
+/*
+controller defines these on $scope
+1. getData which gets data using loc8rData $http.get to API
+2. showError which sets $scope.message to message of error object returned by
 
-// angular controller
-// pass in data via service
+*/
 var locationListCtrl = function($scope, loc8rData, geolocation){
     $scope.message = 'Checking your location...';
     // geolocation service callback: successful attempt. Accepts position object from geo API. position will be used to set lat, lng.
     $scope.getData = function(position){
         $scope.message = 'Searching for nearby places...';
+        // log coords retrieved by browser geolocation method
+        console.log(position);
+        // TODO pass dynamic lat, lng data to loc8rData
+        // loc8rData returns API data and
+        // .success puts it in "data" object used by template 
         loc8rData
             .success(function(data){
                 $scope.message = data.length > 0 ? "" : 'No locations found';
                 $scope.data = { locations: data };
+
             })
             .error(function(e){
                 $scope.message = 'Sorry, something went wrong';
@@ -45,6 +54,8 @@ var loc8rData = function($http) {
 var geolocation = function() {
     var getPosition = function(cbSuccess, cbError, cbNoGeo){
         if (navigator.geolocation){
+            // expects a cb for success and for error
+            // success returns a coords object
             navigator.geolocation.getCurrentPosition(cbSuccess, cbError);
         }
         else {
