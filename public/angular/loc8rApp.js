@@ -18,12 +18,11 @@ var locationListCtrl = function($scope, loc8rData, geolocation){
         console.log(position);
         // TODO pass dynamic lat, lng data to loc8rData
         // loc8rData returns API data and
-        // .success puts it in "data" object used by template 
+        // .success puts it in "data" object used by template
         loc8rData
             .success(function(data){
                 $scope.message = data.length > 0 ? "" : 'No locations found';
                 $scope.data = { locations: data };
-
             })
             .error(function(e){
                 $scope.message = 'Sorry, something went wrong';
@@ -41,7 +40,7 @@ var locationListCtrl = function($scope, loc8rData, geolocation){
             $scope.message = 'Geolocation not supported by browser.';
         });
     };
-    // pass our functions to geolocation service we defined below
+    // pass our functions to geolocation service we defined
     geolocation.getPosition($scope.getData, $scope.showError, $scope.noGeo);
 };
 
@@ -70,8 +69,9 @@ var _isNumeric = function(n){
     return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-// return a function to process distance value into human readable
-// check distance is a numeric value first, else return '?'
+// filter called in template. like a directive it returns something.
+// it returns a function to process distance into human readable
+// check distance is a numeric value first, else return '?' then translates it into km or m
 var formatDistance = function(){
     return function(distance){
         var unit, numDistance;

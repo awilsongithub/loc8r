@@ -53,10 +53,13 @@ module.exports.locationsReadOne = function (req, res){
 /* findById & update in code block of callback
 pass callback to save to get saved location and send response */
 module.exports.locationsUpdateOne = function(req, res){
+
+    // CHECK FOR LOCATION ID
   if (!req.params.locationid){
     sendJsonResponse(res, 404, {"message": "not found, locationid required"});
     return;
   }
+  // FIND BY ID, SEND ERROR MESSAGES IF NEEDED
   Loc
     .findById(req.params.locationid)
     .select('-reviews -rating')
@@ -68,11 +71,11 @@ module.exports.locationsUpdateOne = function(req, res){
         sendJsonResponse(res, 404, err);
         return;
       }
+      // UPDATE IT
       location.name = req.body.name;
       location.address = req.body.address;
       location.facilities = req.body.facilities.split(",");
       location.coords = [parseFloat(req.body.lng), parseFloat(req.body.lat)];
-
       // two sets of opening times data required pass required fields validation in model and create a location?
       location.openingTimes = [{
         days: req.body.days1,
@@ -85,7 +88,7 @@ module.exports.locationsUpdateOne = function(req, res){
         closing: req.body.closing2,
         closed: req.body.closed2
       }];
-
+      // SAVE IT & SHOW IT TO USER
       location.save(function(err, location){
         if (err) {
           sendJsonResponse(res, 404, err);
@@ -114,8 +117,9 @@ module.exports.locationsDeleteOne = function(req, res){
   }
 };
 
+// CREATE NEW LOCATION (works)
+// mongoose .create method takes 1. data object custom built with req.body data and 2. callback expecting err, and new location doc as saved in db
 module.exports.locationsCreate = function(req, res){
-  // Loc model .create method takes data object custom built with req.body data and callback expecting err, new doc as saved in db
   Loc
     .create({
       name: req.body.name,
@@ -160,8 +164,9 @@ module.exports.locationsListByDistance = function(req, res){
     sendJsonResponse(res, 404, {"message": "lng and lat query parameters are required"});
     return;
   }
-  // use model to query for nearby location docs
-  // push custom results onto locations array to return
+  // use model Loc to query for nearby location docs
+  // geoNear built in mongoose method returning docs in order of proximity to point
+  // cb pushes results returned onto locations array to return
   Loc.geoNear(point, geoOptions, function(err, results, stats){
 
     // console.log('results: ' + results);
@@ -191,6 +196,4 @@ module.exports.locationsListByDistance = function(req, res){
 
   }); // end geoNear
 }; // end locationsListByDistance
-// MLAB locations both have these coords /locations?lng=-87.627924&lat=41.860417
-// lat overflow and cultural ctr ?lng=-87.627227&lat=41.877512
-// pk mich bus ?lng=-87.55555&lat= 41.877512
+// MLAB locations both have these coords /locations?lng=-87.627227&lat=41.877512
